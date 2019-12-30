@@ -1,6 +1,9 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-IO.Socket socket = IO.io('http://127.0.0.1:9200', <String, dynamic>{
+//String socketURL = 'http://127.0.0.1:9200';
+String socketURL = 'https://fiora.suisuijiang.com';
+
+IO.Socket socket = IO.io(socketURL, <String, dynamic>{
   'transports': ['websocket'],
 });
 

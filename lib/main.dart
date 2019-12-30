@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './screens/home.dart';
 import './fetch.dart' as Fetch;
 
 void main() => runApp(MyApp());
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Fiora'),
+      home: HomePage(),
     );
   }
 }
@@ -46,7 +47,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
   void _incrementCounter(context) async {
     var result = await Fetch.fetch('login', {'username': 'a', 'password': 'a'});

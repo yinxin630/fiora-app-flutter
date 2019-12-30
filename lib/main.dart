@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './fetch.dart' as Fetch;
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Fiora'),
     );
   }
 }
@@ -46,15 +48,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _incrementCounter(context) async {
+    var result = await Fetch.fetch('login', {'username': 'a', 'password': 'a'});
+    print(result);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("提示"),
+          content: new Text(result[0] != null ? result[0]: result[1].toString()),
+        );
+      },
+    );
   }
 
   @override
@@ -92,19 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
+              '点击按钮请求登录, 别忘了先跑服务端',
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      floatingActionButton: RaisedButton(
+        onPressed: () => _incrementCounter(context),
+        // tooltip: 'Increment',
+        child: Text('请求登录'),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }

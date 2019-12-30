@@ -7,6 +7,7 @@ import './socket.dart' as Socket;
 /// 返回数组 [err, data], 类似 node callback 模式
 Future<dynamic> fetch(String event, dynamic data) {
   Completer c = new Completer();
+  print(data);
   Socket.socket.emitWithAck(event, data, ack: (dynamic result) {
     if (result is String) {
       c.complete([result, null]);

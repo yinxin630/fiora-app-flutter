@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './fetch.dart' as Fetch;
+import 'package:fiora_app_flutter/sevices/index.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'fuck fiora',
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter(context) async {
-    var result = await Fetch.fetch('login', {'username': 'a', 'password': 'a'});
+    var result = await Service.loginWithPass('a', 'a');
     print(result);
 
     showDialog(

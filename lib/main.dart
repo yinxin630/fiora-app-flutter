@@ -23,7 +23,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      // home: HomePage(),
+      initialRoute: '/',
+      routes: {
+        HomePage.routeName: (ctx) => HomePage(),
+      },
     );
   }
 }
@@ -47,7 +51,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   void _incrementCounter(context) async {
     var result = await Fetch.fetch('login', {'username': 'a', 'password': 'a'});
     print(result);
@@ -58,7 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
         // return object of type Dialog
         return AlertDialog(
           title: new Text("提示"),
-          content: new Text(result[0] != null ? result[0]: result[1].toString()),
+          content:
+              new Text(result[0] != null ? result[0] : result[1].toString()),
         );
       },
     );

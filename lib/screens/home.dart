@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../widgets/auth.dart';
 import '../utils/profileClipper.dart';
 
-
 class HomePage extends StatelessWidget {
-  num customTop = 90;
+  static const routeName = '/';
+
+  final num customTop = 90;
 
   void _login(BuildContext ctx) {
     showModalBottomSheet(
       context: ctx,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
-      ),
+      // shape: RoundedRectangleBorder(
+      //   borderRadius: BorderRadius.circular(30.0),
+      // ),
       backgroundColor: Colors.white,
       builder: (_) {
         return Container(
-          height: 547,
+          height: ScreenUtil().setHeight(760),
           child: Center(
-            child: Text('123123123'),
+            child: Auth(),
           ),
         );
       },
@@ -33,7 +35,7 @@ class HomePage extends StatelessWidget {
       allowFontScaling: true,
     )..init(context);
     return Scaffold(
-      backgroundColor: Color.fromRGBO(5, 159, 149, 0.8),
+      // backgroundColor: Color.fromRGBO(5, 159, 149, 0.8),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,27 +70,32 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(
               height: ScreenUtil().setHeight(50),
+              child: Text('123'),
             ),
-            // SizedBox(
-            //   height: ScreenUtil().setHeight(1050),
-            //   child: ListView.builder(
-            //     scrollDirection: Axis.horizontal,
-            //     physics: BouncingScrollPhysics(),
-            //     itemCount: products.length,
-            //     itemBuilder: (context, index) {
-            //       Shoes shoes = products[index];
-            //       return Padding(
-            //         padding: EdgeInsets.only(
-            //           left: ScreenUtil().setWidth(30),
-            //         ),
-            //         child: ProductCard(shoes: shoes, cardNum: index),
-            //       );
-            //     },
-            //   ),
-            // ),
+            SizedBox(
+              height: ScreenUtil().setHeight(1050),
+              child: ListView.builder(
+                // scrollDirection: Axis.horizontal,
+                // physics: BouncingScrollPhysics(),
+                itemCount: [1, 2, 3].length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: double.infinity,
+                    color: Color.fromRGBO(5, 5, 5, 1),
+                    padding: EdgeInsets.only(
+                      left: ScreenUtil().setWidth(30),
+                    ),
+                    child: Text(
+                      [1, 2, 3][index].toString(),
+                      style: TextStyle(backgroundColor: Colors.red),
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
-    );;
+    );
   }
 }

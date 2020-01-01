@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-import '../fetch.dart' as Fetch;
+import '../providers/auth.dart';
+import '../models/socket_exception.dart';
 
 enum AuthMode { Signup, Login }
 
-class Auth extends StatefulWidget {
+class AuthWidget extends StatefulWidget {
   @override
-  _AuthState createState() => _AuthState();
+  _AuthAuthWidgetState createState() => _AuthAuthWidgetState();
 }
 
-class _AuthState extends State<Auth> {
+class _AuthAuthWidgetState extends State<AuthWidget>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -24,7 +27,7 @@ class _AuthState extends State<Auth> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('An Error Occurred!'),
+        title: Text('出错了!'),
         content: Text(message),
         actions: <Widget>[
           FlatButton(
@@ -48,28 +51,21 @@ class _AuthState extends State<Auth> {
     setState(() {
       _isLoading = true;
     });
-
-    var result = await Fetch.fetch(
-      'login',
-      {'username': _authData['username'], 'password': _authData['password']},
-    );
-    print(result);
-
-    setState(() {
-      _isLoading = false;
-    });
-    if (result[0] == null) return Navigator.of(context).pop();
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return AlertDialog(
-          title: new Text("提示"),
-          content:
-              new Text(result[0] != null ? result[0] : result[1].toString()),
-        );
-      },
-    );
+    try {
+      await Provider.of<Auth>(context, listen: false)
+          .login(_authData['username'], _authData['password']);
+      Navigator.of(context).pop();
+      setState(() {
+        _isLoading = false;
+      });
+    } on SocketException catch (e) {
+      Navigator.of(context).pop();
+      _showErrorDialog(e.toString());
+    } catch (e) {
+      print(e);
+      const errorMessage = '未知错误，请稍后再试.';
+      _showErrorDialog(errorMessage);
+    }
   }
 
   @override

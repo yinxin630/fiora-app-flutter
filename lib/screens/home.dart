@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../widgets/auth.dart';
+import '../widgets/auth_widget.dart';
 import '../utils/profileClipper.dart';
 
 class HomePage extends StatelessWidget {
-  static const routeName = '/';
+  static const routeName = '/home';
 
   final num customTop = 90;
 
@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
         return Container(
           height: ScreenUtil().setHeight(760),
           child: Center(
-            child: Auth(),
+            child: AuthWidget(),
           ),
         );
       },

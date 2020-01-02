@@ -14,6 +14,8 @@ class AuthWidget extends StatefulWidget {
 
 class _AuthAuthWidgetState extends State<AuthWidget>
     with SingleTickerProviderStateMixin {
+  // 登录 小部件
+
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   Map<String, String> _authData = {
@@ -55,9 +57,6 @@ class _AuthAuthWidgetState extends State<AuthWidget>
       await Provider.of<Auth>(context, listen: false)
           .login(_authData['username'], _authData['password']);
       Navigator.of(context).pop();
-      setState(() {
-        _isLoading = false;
-      });
     } on SocketException catch (e) {
       Navigator.of(context).pop();
       _showErrorDialog(e.toString());

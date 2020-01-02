@@ -1,31 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../widgets/auth_widget.dart';
-import '../utils/profileClipper.dart';
+import '../widgets/avatar_widget.dart';
 
 class HomePage extends StatelessWidget {
   static const routeName = '/home';
 
   final num customTop = 90;
-
-  void _login(BuildContext ctx) {
-    showModalBottomSheet(
-      context: ctx,
-      // shape: RoundedRectangleBorder(
-      //   borderRadius: BorderRadius.circular(30.0),
-      // ),
-      backgroundColor: Colors.white,
-      builder: (_) {
-        return Container(
-          height: ScreenUtil().setHeight(760),
-          child: Center(
-            child: AuthWidget(),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +16,7 @@ class HomePage extends StatelessWidget {
       allowFontScaling: true,
     )..init(context);
     return Scaffold(
+      // drawer: ,
       // backgroundColor: Color.fromRGBO(5, 159, 149, 0.8),
       body: SingleChildScrollView(
         child: Column(
@@ -53,18 +35,7 @@ class HomePage extends StatelessWidget {
                     icon: Icon(Icons.menu),
                     onPressed: () {},
                   ),
-                  GestureDetector(
-                    onTap: () => _login(context),
-                    child: ClipOval(
-                      clipper: ProfileClipper(),
-                      child: Image.asset(
-                        "assets/images/headericon.jpg",
-                        width: ScreenUtil().setWidth(160),
-                        height: ScreenUtil().setHeight(160),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
+                  AvatarWidget(),
                 ],
               ),
             ),

@@ -34,9 +34,10 @@ class Avatar extends StatelessWidget {
         imageBuilder: (context, imageProvider) => Container(
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+              image: imageProvider,
+              fit: BoxFit.cover,
+              colorFilter: null,
+            ),
           ),
           width: width,
           height: height,

@@ -1,7 +1,11 @@
+import 'package:fiora_app_flutter/widgets/linkman.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/avatar_widget.dart';
+import '../models/friends.dart';
+import '../providers/auth.dart';
 
 class HomePage extends StatelessWidget {
   static const routeName = '/home';
@@ -40,29 +44,39 @@ class HomePage extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: ScreenUtil().setHeight(50),
-              child: Text('123'),
-            ),
-            SizedBox(
-              height: ScreenUtil().setHeight(1050),
-              child: ListView.builder(
-                // scrollDirection: Axis.horizontal,
-                // physics: BouncingScrollPhysics(),
-                itemCount: [1, 2, 3].length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: double.infinity,
-                    color: Color.fromRGBO(5, 5, 5, 1),
-                    padding: EdgeInsets.only(
-                      left: ScreenUtil().setWidth(30),
-                    ),
-                    child: Text(
-                      [1, 2, 3][index].toString(),
-                      style: TextStyle(backgroundColor: Colors.red),
-                    ),
-                  );
-                },
+              height: ScreenUtil().setHeight(1950),
+              child: Consumer<Auth>(
+                builder: (ctx, authData, child) => ListView.builder(
+                  itemCount: authData.friends.length,
+                  itemBuilder: (ctx, i) => Linkman(
+                    id: (authData.friends[i] as FriendItem).sId,
+                    avatar: (authData.friends[i] as FriendItem).to.avatar,
+                    name: (authData.friends[i] as FriendItem).to.username,
+                    massage: (authData.friends[i] as FriendItem).to.username,
+                    time: (authData.friends[i] as FriendItem).to.username,
+                  ),
+                ),
               ),
+              // Container(
+              //   child: ListView.builder(
+              //     // scrollDirection: Axis.horizontal,
+              //     // physics: BouncingScrollPhysics(),
+              //     itemCount: [1, 2, 3].length,
+              //     itemBuilder: (context, index) {
+              //       return Container(
+              //         width: double.infinity,
+              //         color: Color.fromRGBO(5, 5, 5, 1),
+              //         padding: EdgeInsets.only(
+              //           left: ScreenUtil().setWidth(30),
+              //         ),
+              //         child: Text(
+              //           [1, 2, 3][index].toString(),
+              //           style: TextStyle(backgroundColor: Colors.red),
+              //         ),
+              //       );
+              //     },
+              //   ),
+              // ),
             ),
           ],
         ),

@@ -1,20 +1,22 @@
 import 'package:flutter/foundation.dart';
 
-class GroupItem {
-  final String sId;
-  final String name;
-  final String avatar;
-  final DateTime createTime;
-  final String creator;
+import '../models/groups.dart';
 
-  GroupItem({
-    @required this.sId,
-    @required this.name,
-    @required this.avatar,
-    @required this.createTime,
-    @required this.creator,
-  });
-}
+// class GroupItem {
+//   final String sId;
+//   final String name;
+//   final String avatar;
+//   final DateTime createTime;
+//   final String creator;
+
+//   GroupItem({
+//     @required this.sId,
+//     @required this.name,
+//     @required this.avatar,
+//     @required this.createTime,
+//     @required this.creator,
+//   });
+// }
 
 
 class Friends with ChangeNotifier {
@@ -46,7 +48,6 @@ class Friends with ChangeNotifier {
           sId: user.sId,
           name: user.name,
           avatar: user.avatar,
-          createTime: user.createTime,
           creator: user.creator,
         ),
       );

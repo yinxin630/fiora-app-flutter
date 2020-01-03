@@ -1,209 +1,209 @@
 import 'package:flutter/foundation.dart';
 
-// class UserItem {
-//   final String sId;
-//   final String avatar;
-//   final String username;
-//   final String tag;
-//   // 考虑再三， 将 friends 和 groups 移出 UserItem 包装
-//   // final List<FriendItem> friends;
-//   // final List<GroupsItem> groups;
-//   final bool isAdmin;
+class UserItem {
+  final String sId;
+  final String avatar;
+  final String username;
+  final String tag;
+  // 考虑再三， 将 friends 和 groups 移出 UserItem 包装
+  // final List<FriendItem> friends;
+  // final List<GroupsItem> groups;
+  final bool isAdmin;
 
-//   UserItem({
-//     @required this.sId,
-//     @required this.avatar,
-//     @required this.username,
-//     this.tag,
-//     // this.friends,
-//     // this.groups,
-//     @required this.isAdmin,
-//   });
-// }
+  UserItem({
+    @required this.sId,
+    @required this.avatar,
+    @required this.username,
+    this.tag,
+    // this.friends,
+    // this.groups,
+    @required this.isAdmin,
+  });
+}
 
-// class User with ChangeNotifier {
-//   List<UserItem> _items = [];
+class User with ChangeNotifier {
+  List<UserItem> _items = [];
 
-//   List<UserItem> get items {
-//     return [..._items];
-//   }
+  List<UserItem> get items {
+    return [..._items];
+  }
 
-//   int get itemCount {
-//     return _items.length;
-//   }
+  int get itemCount {
+    return _items.length;
+  }
 
-//   // 查找用户
-//   UserItem findById(String id) {
-//     return _items.firstWhere((item) => item.sId == id);
-//   }
+  // 查找用户
+  UserItem findById(String id) {
+    return _items.firstWhere((item) => item.sId == id);
+  }
 
-//   void addItem(
-//     UserItem user,
-//   ) {
-//     final userIndex = _items.indexWhere((item) => item.sId == user.sId);
+  void addItem(
+    UserItem user,
+  ) {
+    final userIndex = _items.indexWhere((item) => item.sId == user.sId);
 
-//     if (userIndex >= 0) {
-//       _items[userIndex] = user;
-//     } else {
-//       _items.add(
-//         UserItem(
-//           sId: user.sId,
-//           avatar: user.avatar,
-//           username: user.username,
-//           tag: user.tag,
-//           isAdmin: user.isAdmin,
-//         ),
-//       );
+    if (userIndex >= 0) {
+      _items[userIndex] = user;
+    } else {
+      _items.add(
+        UserItem(
+          sId: user.sId,
+          avatar: user.avatar,
+          username: user.username,
+          tag: user.tag,
+          isAdmin: user.isAdmin,
+        ),
+      );
+    }
+    print(_items);
+    notifyListeners();
+  }
+
+  void removeItem(String sId) {
+    _items.removeWhere((item) => item.sId == sId);
+    notifyListeners();
+  }
+
+  void clear() {
+    _items = [];
+    notifyListeners();
+  }
+}
+
+// class User {
+//   String sId;
+//   String avatar;
+//   String username;
+//   String tag;
+//   List<Groups> groups;
+//   List<Friends> friends;
+//   bool isAdmin;
+
+//   User(
+//       {this.sId,
+//       this.avatar,
+//       this.username,
+//       this.tag,
+//       this.groups,
+//       this.friends,
+//       this.isAdmin});
+
+//   User.fromJson(Map<String, dynamic> json) {
+//     sId = json['_id'];
+//     avatar = json['avatar'];
+//     username = json['username'];
+//     tag = json['tag'];
+//     if (json['groups'] != null) {
+//       groups = new List<Groups>();
+//       json['groups'].forEach((v) {
+//         groups.add(new Groups.fromJson(v));
+//       });
 //     }
-//     print(_items);
-//     notifyListeners();
+//     if (json['friends'] != null) {
+//       friends = new List<Friends>();
+//       json['friends'].forEach((v) {
+//         friends.add(new Friends.fromJson(v));
+//       });
+//     }
+//     isAdmin = json['isAdmin'];
 //   }
 
-//   void removeItem(String sId) {
-//     _items.removeWhere((item) => item.sId == sId);
-//     notifyListeners();
-//   }
-
-//   void clear() {
-//     _items = [];
-//     notifyListeners();
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['_id'] = this.sId;
+//     data['avatar'] = this.avatar;
+//     data['username'] = this.username;
+//     data['tag'] = this.tag;
+//     if (this.groups != null) {
+//       data['groups'] = this.groups.map((v) => v.toJson()).toList();
+//     }
+//     if (this.friends != null) {
+//       data['friends'] = this.friends.map((v) => v.toJson()).toList();
+//     }
+//     data['isAdmin'] = this.isAdmin;
+//     return data;
 //   }
 // }
 
-class User {
-  String sId;
-  String avatar;
-  String username;
-  String tag;
-  List<Groups> groups;
-  List<Friends> friends;
-  bool isAdmin;
+// class Groups {
+//   String sId;
+//   String name;
+//   String avatar;
+//   String createTime;
+//   String creator;
 
-  User(
-      {this.sId,
-      this.avatar,
-      this.username,
-      this.tag,
-      this.groups,
-      this.friends,
-      this.isAdmin});
+//   Groups({this.sId, this.name, this.avatar, this.createTime, this.creator});
 
-  User.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    avatar = json['avatar'];
-    username = json['username'];
-    tag = json['tag'];
-    if (json['groups'] != null) {
-      groups = new List<Groups>();
-      json['groups'].forEach((v) {
-        groups.add(new Groups.fromJson(v));
-      });
-    }
-    if (json['friends'] != null) {
-      friends = new List<Friends>();
-      json['friends'].forEach((v) {
-        friends.add(new Friends.fromJson(v));
-      });
-    }
-    isAdmin = json['isAdmin'];
-  }
+//   Groups.fromJson(Map<String, dynamic> json) {
+//     sId = json['_id'];
+//     name = json['name'];
+//     avatar = json['avatar'];
+//     createTime = json['createTime'];
+//     creator = json['creator'];
+//   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['avatar'] = this.avatar;
-    data['username'] = this.username;
-    data['tag'] = this.tag;
-    if (this.groups != null) {
-      data['groups'] = this.groups.map((v) => v.toJson()).toList();
-    }
-    if (this.friends != null) {
-      data['friends'] = this.friends.map((v) => v.toJson()).toList();
-    }
-    data['isAdmin'] = this.isAdmin;
-    return data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['_id'] = this.sId;
+//     data['name'] = this.name;
+//     data['avatar'] = this.avatar;
+//     data['createTime'] = this.createTime;
+//     data['creator'] = this.creator;
+//     return data;
+//   }
+// }
 
-class Groups {
-  String sId;
-  String name;
-  String avatar;
-  String createTime;
-  String creator;
+// class Friends {
+//   String sId;
+//   String from;
+//   To to;
+//   String createTime;
+//   int iV;
 
-  Groups({this.sId, this.name, this.avatar, this.createTime, this.creator});
+//   Friends({this.sId, this.from, this.to, this.createTime, this.iV});
 
-  Groups.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    avatar = json['avatar'];
-    createTime = json['createTime'];
-    creator = json['creator'];
-  }
+//   Friends.fromJson(Map<String, dynamic> json) {
+//     sId = json['_id'];
+//     from = json['from'];
+//     to = json['to'] != null ? new To.fromJson(json['to']) : null;
+//     createTime = json['createTime'];
+//     iV = json['__v'];
+//   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['avatar'] = this.avatar;
-    data['createTime'] = this.createTime;
-    data['creator'] = this.creator;
-    return data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['_id'] = this.sId;
+//     data['from'] = this.from;
+//     if (this.to != null) {
+//       data['to'] = this.to.toJson();
+//     }
+//     data['createTime'] = this.createTime;
+//     data['__v'] = this.iV;
+//     return data;
+//   }
+// }
 
-class Friends {
-  String sId;
-  String from;
-  To to;
-  String createTime;
-  int iV;
+// class To {
+//   String sId;
+//   String username;
+//   String avatar;
 
-  Friends({this.sId, this.from, this.to, this.createTime, this.iV});
+//   To({this.sId, this.username, this.avatar});
 
-  Friends.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    from = json['from'];
-    to = json['to'] != null ? new To.fromJson(json['to']) : null;
-    createTime = json['createTime'];
-    iV = json['__v'];
-  }
+//   To.fromJson(Map<String, dynamic> json) {
+//     sId = json['_id'];
+//     username = json['username'];
+//     avatar = json['avatar'];
+//   }
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['from'] = this.from;
-    if (this.to != null) {
-      data['to'] = this.to.toJson();
-    }
-    data['createTime'] = this.createTime;
-    data['__v'] = this.iV;
-    return data;
-  }
-}
-
-class To {
-  String sId;
-  String username;
-  String avatar;
-
-  To({this.sId, this.username, this.avatar});
-
-  To.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    username = json['username'];
-    avatar = json['avatar'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['username'] = this.username;
-    data['avatar'] = this.avatar;
-    return data;
-  }
-}
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['_id'] = this.sId;
+//     data['username'] = this.username;
+//     data['avatar'] = this.avatar;
+//     return data;
+//   }
+// }
 
 
 // {

@@ -1,32 +1,30 @@
 import 'package:flutter/foundation.dart';
 
-class To {
-  final String sId;
-  final String username;
-  final String avatar;
+import '../models/friends.dart';
 
-  To({
-    @required this.sId,
-    @required this.username,
-    @required this.avatar,
-  });
-}
+// class To {
+//   final String sId;
+//   final String username;
+//   final String avatar;
 
-class FriendItem {
-  final String sId;
-  final String from;
-  final To to;
-  final DateTime createTime;
-  final int iV;
+//   To({
+//     @required this.sId,
+//     @required this.username,
+//     @required this.avatar,
+//   });
+// }
 
-  FriendItem({
-    @required this.sId,
-    @required this.from,
-    @required this.to,
-    @required this.createTime,
-    @required this.iV,
-  });
-}
+// class FriendItem {
+//   final String sId;
+//   final String from;
+//   final To to;
+
+//   FriendItem({
+//     @required this.sId,
+//     @required this.from,
+//     @required this.to,
+//   });
+// }
 
 class Friends with ChangeNotifier {
   List<FriendItem> _items = [];
@@ -56,8 +54,6 @@ class Friends with ChangeNotifier {
         FriendItem(
           sId: user.sId,
           from: user.from,
-          createTime: user.createTime,
-          iV: user.iV,
           to: To(
             sId: user.to.sId,
             username: user.to.username,

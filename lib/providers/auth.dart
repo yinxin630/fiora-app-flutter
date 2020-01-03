@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:fiora_app_flutter/models/groups.dart';
+import 'package:fiora_app_flutter/models/friends.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,13 +14,13 @@ class Auth with ChangeNotifier {
   DateTime _expiryDate; // 过期时间
   Timer _authTimer; // 定时器
   String _token; // token
-  String _avatar; // token
-  String _username; // token
-  String _tag; // token
+  String _avatar; // 头像
+  String _username; // 用户名
+  String _tag; // 标签
   bool _isAdmin; // 判断是否为管理员
 
-  List _frienditem = [];
-  List _groupitem = [];
+  final List<FriendItem> _friends = [];
+  final List<GroupItem> _groups = [];
 
   bool get isAuth {
     return token != null;
@@ -28,12 +30,12 @@ class Auth with ChangeNotifier {
     return _avatar;
   }
 
-  dynamic get frienditem {
-    return [..._frienditem];
+  dynamic get friends {
+    return [..._friends];
   }
 
-  dynamic get groupitem {
-    return [..._groupitem];
+  dynamic get groups {
+    return [..._groups];
   }
 
   String get token {
@@ -59,14 +61,12 @@ class Auth with ChangeNotifier {
         urlSegment,
         {'username': userName, 'password': password},
       );
-      print(res);
+      // print(res);
       if (res[0] != null) {
         throw SocketException(res[0]);
       }
       final resData = res[1];
       setValue(
-        friends: resData['friends'],
-        groups: resData['groups'],
         token: resData['token'],
         userId: resData['_id'],
         isAdmin: resData['isAdmin'],
@@ -77,21 +77,11 @@ class Auth with ChangeNotifier {
           days: 7,
         )),
       );
-      // 旧代码
-      // _frienditem = resData['friends'];
-      // _groupitem = resData['groups'];
-      // _token = resData['token'];
-      // _userId = resData['_id'];
-      // _isAdmin = resData['isAdmin'];
-      // _tag = resData['tag'];
-      // _username = resData['username'];
-      // _avatar = resData['avatar'];
-      // _expiryDate = DateTime.now().add(Duration(
-      //   days: 7,
-      // ));
-      // 过期时间
-      // print(_expiryDate);
       _autoLogout();
+      print((resData['friends'] as List<dynamic>).map((friend) => friend['to']['_id']).toList());
+      getLinkmansLastMessages(resData['_id']);
+      setFriends(resData);
+      setGroups(resData);
       notifyListeners();
       final perfs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -100,7 +90,7 @@ class Auth with ChangeNotifier {
         'isAdmin': _isAdmin,
         'tag': _tag,
         'username': _username,
-        'avatar': _avatar,
+        'avatar': "https:" + _avatar,
         'expiryDate': _expiryDate.toIso8601String(),
       });
       perfs.setString('userData', userData);
@@ -109,14 +99,17 @@ class Auth with ChangeNotifier {
     }
   }
 
+  // 注册
   Future<void> signup(String userName, String password) async {
     return _authenticate('register', userName, password);
   }
 
+  // 登录
   Future<void> login(String userName, String password) async {
     return _authenticate('login', userName, password);
   }
 
+  // 自动登录
   Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
@@ -138,10 +131,7 @@ class Auth with ChangeNotifier {
       throw SocketException(res[0]);
     }
     final resData = res[1];
-    // logout();
     setValue(
-      friends: resData['friends'],
-      groups: resData['groups'],
       token: extractedUserData['token'],
       userId: extractedUserData['userId'],
       isAdmin: extractedUserData['isAdmin'],
@@ -150,24 +140,35 @@ class Auth with ChangeNotifier {
       avatar: extractedUserData['avatar'],
       expiryDate: expiryDate,
     );
-    // 旧代码
-    // _frienditem = resData['friends'];
-    // _groupitem = resData['groups'];
-    // _token = extractedUserData['token'];
-    // _userId = extractedUserData['userId'];
-    // _isAdmin = extractedUserData['isAdmin'];
-    // _tag = extractedUserData['tag'];
-    // _username = extractedUserData['username'];
-    // _avatar = extractedUserData['avatar'];
-    // _expiryDate = expiryDate;
+    getLinkmansLastMessages([resData['_id']]);
+    setFriends(resData);
+    setGroups(resData);
     notifyListeners();
     _autoLogout();
     return true;
   }
 
+  // 获取联系人最后消息
+  Future<void> getLinkmansLastMessages(List<String> linkmanIds) async {
+    try {
+      // print(linkmans);
+      final res = await Fetch.fetch(
+        'getLinkmansLastMessages',
+        {
+          'linkmans': linkmanIds,
+        },
+      );
+      // print(res);
+      if (res[0] != null) {
+        throw SocketException(res[0]);
+      }
+      final resData = res[1];
+    } catch (e) {
+      throw e;
+    }
+  }
+
   void setValue({
-    friends,
-    groups,
     token,
     userId,
     isAdmin,
@@ -176,15 +177,45 @@ class Auth with ChangeNotifier {
     avatar,
     expiryDate,
   }) {
-    _frienditem = friends;
-    _groupitem = groups;
     _token = token;
     _userId = userId;
     _isAdmin = isAdmin;
     _tag = tag;
     _username = username;
-    _avatar = "https:" + avatar;
+    _avatar = avatar;
     _expiryDate = expiryDate;
+  }
+
+  // 组装好友
+  Future<void> setFriends(resData) async {
+    (resData['friends'] as List<dynamic>).forEach((friend) {
+      _friends.add(
+        FriendItem(
+          sId: friend['_id'],
+          from: friend['from'],
+          to: To(
+            sId: friend['to']['_id'],
+            username: friend['to']['username'],
+            avatar: friend['to']['avatar'],
+          ),
+        ),
+      );
+    });
+    print(resData['friends']);
+  }
+
+  // 组装群组
+  Future<void> setGroups(resData) async {
+    (resData['groups'] as List<dynamic>).forEach((group) {
+      _groups.add(
+        GroupItem(
+          sId: group['_id'],
+          name: group['name'],
+          avatar: group['avatar'],
+          creator: group['creator'],
+        ),
+      );
+    });
   }
 
   // 登出
@@ -203,6 +234,7 @@ class Auth with ChangeNotifier {
     // prefs.clear();
   }
 
+  // 自动登出
   void _autoLogout() {
     if (_authTimer != null) {
       _authTimer.cancel();

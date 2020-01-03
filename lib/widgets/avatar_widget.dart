@@ -31,11 +31,13 @@ class AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final avatar = Provider.of<Auth>(context, listen: false).avatar;
     return GestureDetector(
       onTap: () => _showModal(context),
       child: Avatar(
-        url:
-            "https://cdn.suisuijiang.com/Avatar/5d53f133a76e426ce888eeab_1567079280473",
+        url: avatar != null
+            ? avatar
+            : 'https://cdn.suisuijiang.com/GroupAvatar/5adad39555703565e7903f78_1546952226984?imageView2/3/w/96/h/96',
         width: ScreenUtil().setWidth(160),
         height: ScreenUtil().setHeight(160),
       ),

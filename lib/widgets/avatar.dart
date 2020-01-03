@@ -17,8 +17,9 @@ class Avatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipOval(
       clipper: ProfileClipper(),
-      child: Image.network(
-        url,
+      child: FadeInImage(
+        placeholder: AssetImage('assets/images/headericon.jpg'),
+        image: NetworkImage(url),
         width: width,
         height: height,
         fit: BoxFit.cover,

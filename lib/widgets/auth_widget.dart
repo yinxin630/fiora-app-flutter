@@ -86,6 +86,7 @@ class _AuthAuthWidgetState extends State<AuthWidget>
                   if (value.isEmpty) {
                     return '无效的用户名!';
                   }
+                  return null;
                 },
                 onSaved: (value) {
                   _authData['username'] = value;
@@ -99,6 +100,7 @@ class _AuthAuthWidgetState extends State<AuthWidget>
                   if (value.isEmpty) {
                     return '密码不能为空!';
                   }
+                  return null;
                 },
                 onSaved: (value) {
                   _authData['password'] = value;
@@ -109,6 +111,15 @@ class _AuthAuthWidgetState extends State<AuthWidget>
               ),
               _isLoading
                   ? CircularProgressIndicator()
+                  // 后面替换成自定义按钮
+                  // child: Container(
+                  //   padding: EdgeInsets.all(12.0),
+                  //   decoration: BoxDecoration(
+                  //     color: Theme.of(context).buttonColor,
+                  //     borderRadius: BorderRadius.circular(8.0),
+                  //   ),
+                  //   child: Text('My Button'),
+                  // ),
                   : RaisedButton(
                       child: Text(_authMode == AuthMode.Login ? '登录' : '注册'),
                       onPressed: _submit,

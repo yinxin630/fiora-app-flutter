@@ -29,6 +29,10 @@ class Auth with ChangeNotifier {
     return token != null;
   }
 
+  int get messageCount {
+    return _message.length;
+  }
+
   dynamic get avatar {
     return _avatar;
   }
@@ -210,6 +214,15 @@ class Auth with ChangeNotifier {
     } catch (e) {
       throw e;
     }
+  }
+
+  List<Message> getMessageItem(String sId) {
+    return _message.containsKey(sId) ? _message[sId] : [];
+    // if (_message.containsKey(sId)) {
+    //   // print(sId);
+    //   print(_message[sId]);
+    // }
+    // return [];
   }
 
   void setValue({

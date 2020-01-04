@@ -55,6 +55,7 @@ class MyApp extends StatelessWidget {
           // initialRoute: '/',
           routes: {
             HomePage.routeName: (ctx) => HomePage(),
+            User.routeName: (ctx) => User(),
           },
         ),
       ),

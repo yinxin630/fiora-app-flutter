@@ -1,3 +1,4 @@
+import 'package:fiora_app_flutter/screens/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -63,25 +64,33 @@ class Linkman extends StatelessWidget {
       onDismissed: (direction) {
         // Provider.of<Cart>(context, listen: false).removeItem(productId);
       },
-      child: Card(
-        margin: EdgeInsets.symmetric(
-          horizontal: 15,
-          vertical: 4,
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(2),
-          child: ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Avatar(
-                url: "https:" + avatar,
-                width: ScreenUtil().setWidth(110),
-                height: ScreenUtil().setHeight(110),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).pushNamed(User.routeName);
+        },
+        child: Hero(
+          tag: '5adad39555703565e7903f785d53f133a76e426ce888eeab',
+          child: Card(
+            margin: EdgeInsets.symmetric(
+              horizontal: 15,
+              vertical: 4,
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(2),
+              child: ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Avatar(
+                    url: "https:" + avatar,
+                    width: ScreenUtil().setWidth(110),
+                    height: ScreenUtil().setHeight(110),
+                  ),
+                ),
+                title: Text(name),
+                subtitle: Text(massage),
+                trailing: Text(time),
               ),
             ),
-            title: Text(name),
-            subtitle: Text(massage),
-            trailing: Text(time),
           ),
         ),
       ),

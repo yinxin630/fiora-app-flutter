@@ -48,6 +48,7 @@ class HomePage extends StatelessWidget {
               child: Consumer<Auth>(
                 builder: (ctx, authData, child) => ListView.builder(
                   itemCount: authData.friends.length,
+                  // 需要根据消息时间 sort， 需要将
                   itemBuilder: (ctx, i) => Linkman(
                     id: (authData.friends[i] as FriendItem).sId,
                     avatar: (authData.friends[i] as FriendItem).to.avatar,

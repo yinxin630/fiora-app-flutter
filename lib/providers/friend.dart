@@ -50,17 +50,17 @@ class Friends with ChangeNotifier {
     if (userIndex >= 0) {
       _items[userIndex] = user;
     } else {
-      _items.add(
-        FriendItem(
-          sId: user.sId,
-          from: user.from,
-          to: To(
-            sId: user.to.sId,
-            username: user.to.username,
-            avatar: user.to.avatar,
-          ),
-        ),
-      );
+      // _items.add(
+      //   FriendItem(
+      //     sId: user.sId,
+      //     from: user.from,
+      //     to: To(
+      //       sId: user.to.sId,
+      //       username: user.to.username,
+      //       avatar: user.to.avatar,
+      //     ),
+      //   ),
+      // );
     }
     print(_items);
     notifyListeners();

@@ -9,7 +9,7 @@ class Linkman extends StatelessWidget {
   final String avatar;
   final String name;
   final String massage;
-  final String time;
+  final DateTime time;
 
   Linkman({
     @required this.id,
@@ -88,7 +88,7 @@ class Linkman extends StatelessWidget {
                 ),
                 title: Text(name),
                 subtitle: Text(massage),
-                trailing: Text(time),
+                trailing: Text(time.toString()),
               ),
             ),
           ),

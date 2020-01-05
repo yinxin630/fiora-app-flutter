@@ -3,7 +3,9 @@ import 'dart:async';
 
 import 'package:fiora_app_flutter/models/groups.dart';
 import 'package:fiora_app_flutter/models/friends.dart';
+import 'package:fiora_app_flutter/models/linkman.dart';
 import 'package:fiora_app_flutter/models/message.dart';
+import 'package:fiora_app_flutter/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +24,8 @@ class Auth with ChangeNotifier {
 
   Map<String, List<Message>> _message = {};
 
+  List<LinkmanItem> _linkmans = [];
+
   final List<FriendItem> _friends = [];
   final List<GroupItem> _groups = [];
 
@@ -29,21 +33,12 @@ class Auth with ChangeNotifier {
     return token != null;
   }
 
-  int get messageCount {
-    return _message.length;
-  }
+  int get messageCount => _message.length;
 
-  dynamic get avatar {
-    return _avatar;
-  }
+  dynamic get avatar => _avatar;
 
-  dynamic get friends {
-    return [..._friends];
-  }
+  List<LinkmanItem> get linkmans => [..._linkmans];
 
-  dynamic get groups {
-    return [..._groups];
-  }
 
   String get token {
     if (_expiryDate != null &&
@@ -87,10 +82,10 @@ class Auth with ChangeNotifier {
       _autoLogout();
       final linkmanIds = [
         ...(resData['groups'] as List<dynamic>).map((group) => group['_id']),
-        ...(resData['friends'] as List<dynamic>)
-            .map((friend) => getFriendId(friend['from'], friend['to']['_id'])),
+        ...(resData['friends'] as List<dynamic>).map(
+            (friend) => getFriendId(friend['from'], friend['to']['_id'])),
       ];
-      getLinkmansLastMessages(linkmanIds);
+      await getLinkmansLastMessages(linkmanIds);
       notifyListeners();
       final perfs = await SharedPreferences.getInstance();
       final userData = json.encode({
@@ -148,13 +143,16 @@ class Auth with ChangeNotifier {
     if (res[0] != null) {
       throw SocketException(res[0]);
     }
+    // logout();
     final resData = res[1];
     final linkmanIds = [
       ...(resData['groups'] as List<dynamic>).map((group) => group['_id']),
-      ...(resData['friends'] as List<dynamic>)
-          .map((friend) => getFriendId(friend['from'], friend['to']['_id'])),
+      ...(resData['friends'] as List<dynamic>).map(
+          (friend) => getFriendId(friend['from'], friend['to']['_id'])),
     ];
-    getLinkmansLastMessages(linkmanIds);
+    await getLinkmansLastMessages(linkmanIds);
+    setFriends(resData);
+    setGroups(resData);
     setValue(
       token: extractedUserData['token'],
       userId: extractedUserData['userId'],
@@ -164,8 +162,6 @@ class Auth with ChangeNotifier {
       avatar: extractedUserData['avatar'],
       expiryDate: expiryDate,
     );
-    setFriends(resData);
-    setGroups(resData);
     notifyListeners();
     _autoLogout();
     return true;
@@ -210,20 +206,13 @@ class Auth with ChangeNotifier {
           return messageItem;
         });
       });
-      print(_message);
+      // print(_message);
     } catch (e) {
       throw e;
     }
   }
 
-  List<Message> getMessageItem(String sId) {
-    return _message.containsKey(sId) ? _message[sId] : [];
-    // if (_message.containsKey(sId)) {
-    //   // print(sId);
-    //   print(_message[sId]);
-    // }
-    // return [];
-  }
+  List<Message> getMessageItem(String sId) => _message.containsKey(sId) ? _message[sId] : [];
 
   void setValue({
     token,
@@ -246,34 +235,41 @@ class Auth with ChangeNotifier {
   // 组装好友
   Future<void> setFriends(resData) async {
     (resData['friends'] as List<dynamic>).forEach((friend) {
-      _friends.add(
-        FriendItem(
-          sId: friend['_id'],
-          from: friend['from'],
-          to: To(
-            sId: friend['to']['_id'],
-            username: friend['to']['username'],
-            avatar: friend['to']['avatar'],
-          ),
+      String usId = getFriendId(friend['from'], friend['to']['_id']);
+      Message lastMessage = _message[usId][_message[usId].length - 1];
+      _linkmans.add(
+        LinkmanItem(
+          sId: usId,
+          type: '',
+          unread: 0,
+          name: friend['to']['username'],
+          avatar: friend['to']['avatar'],
+          creator: '',
+          createTime: DateTime.parse(friend['createTime']),
+          message: lastMessage,
         ),
       );
     });
-    // print(resData['friends']);
   }
 
   // 组装群组
   Future<void> setGroups(resData) async {
     (resData['groups'] as List<dynamic>).forEach((group) {
-      _groups.add(
-        GroupItem(
-          sId: group['_id'],
+      String usId = group['_id'];
+      Message lastMessage = _message[usId][_message[usId].length - 1];
+      _linkmans.add(
+        LinkmanItem(
+          sId: usId,
+          type: '',
+          unread: 0,
           name: group['name'],
           avatar: group['avatar'],
           creator: group['creator'],
+          createTime: DateTime.parse(lastMessage.createTime),
+          message: lastMessage,
         ),
       );
     });
-    // print(resData['groups']);
   }
 
   // 登出

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../widgets/avatar_widget.dart';
 import '../models/friends.dart';
+import '../models/linkman.dart';
 import '../providers/auth.dart';
 
 class HomePage extends StatelessWidget {
@@ -47,14 +48,14 @@ class HomePage extends StatelessWidget {
               height: ScreenUtil().setHeight(1950),
               child: Consumer<Auth>(
                 builder: (ctx, authData, child) => ListView.builder(
-                  itemCount: authData.friends.length,
+                  itemCount: authData.linkmans.length,
                   // 需要根据消息时间 sort， 需要将
                   itemBuilder: (ctx, i) => Linkman(
-                    id: (authData.friends[i] as FriendItem).sId,
-                    avatar: (authData.friends[i] as FriendItem).to.avatar,
-                    name: (authData.friends[i] as FriendItem).to.username,
-                    massage: (authData.friends[i] as FriendItem).to.username,
-                    time: (authData.friends[i] as FriendItem).to.username,
+                    id: (authData.linkmans[i] as LinkmanItem).sId,
+                    avatar: (authData.linkmans[i] as LinkmanItem).avatar,
+                    name: (authData.linkmans[i] as LinkmanItem).name,
+                    massage: (authData.linkmans[i] as LinkmanItem).message.content,
+                    time: DateTime.parse((authData.linkmans[i] as LinkmanItem).message.createTime),
                   ),
                 ),
               ),

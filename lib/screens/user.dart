@@ -8,22 +8,23 @@ class User extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // authData.getMessageItem('5adad39555703565e7903f785d53f133a76e426ce888eeab')
+    final id = ModalRoute.of(context).settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         title: Text('123123'),
       ),
       body: Consumer<Auth>(
         builder: (ctx, authData, child) => ListView.builder(
-          itemCount: authData
-              .getMessageItem(
-                  '5adad39555703565e7903f785d53f133a76e426ce888eeab')
-              .length,
+          itemCount: authData.getMessageItem(id).length,
           itemBuilder: (ctx, i) => MessageWidget(
-              content: authData
-                  .getMessageItem(
-                      '5adad39555703565e7903f785d53f133a76e426ce888eeab')[i]
-                  .content),
+            id: authData.getMessageItem(id)[i].sId,
+            content: authData.getMessageItem(id)[i].content,
+            type: authData.getMessageItem(id)[i].type,
+            name: authData.getMessageItem(id)[i].from.username,
+            avatar: authData.getMessageItem(id)[i].from.avatar,
+            creator: authData.getMessageItem(id)[i].from.sId,
+            createTime: DateTime.parse(authData.getMessageItem(id)[i].createTime),
+          ),
         ),
       ),
     );

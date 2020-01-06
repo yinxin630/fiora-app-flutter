@@ -1,4 +1,5 @@
 import 'package:fiora_app_flutter/screens/user.dart';
+import 'package:fiora_app_flutter/utils/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,23 +9,26 @@ class Linkman extends StatelessWidget {
   final String id;
   final String avatar;
   final String name;
-  final String massage;
+  final String message;
+  final String lastName;
   final DateTime time;
 
   Linkman({
     @required this.id,
     @required this.avatar,
     @required this.name,
-    @required this.massage,
+    @required this.message,
+    @required this.lastName,
     @required this.time,
   });
 
   @override
   Widget build(BuildContext context) {
+    print(id);
     return Dismissible(
       key: ValueKey(id),
       background: Container(
-        color: Theme.of(context).errorColor,
+        // color: Theme.of(context).errorColor,
         child: Icon(
           Icons.delete,
           color: Colors.white,
@@ -66,10 +70,13 @@ class Linkman extends StatelessWidget {
       },
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context).pushNamed(User.routeName);
+          Navigator.of(context).pushNamed(
+            User.routeName,
+            arguments: id,
+          );
         },
         child: Hero(
-          tag: '5adad39555703565e7903f785d53f133a76e426ce888eeab',
+          tag: id,
           child: Card(
             margin: EdgeInsets.symmetric(
               horizontal: 15,
@@ -87,8 +94,12 @@ class Linkman extends StatelessWidget {
                   ),
                 ),
                 title: Text(name),
-                subtitle: Text(massage),
-                trailing: Text(time.toString()),
+                subtitle: Text(
+                  id.length < 35 ? '$lastName: $message':  message,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+                trailing: Text(Time.formatTime(time)),
               ),
             ),
           ),
